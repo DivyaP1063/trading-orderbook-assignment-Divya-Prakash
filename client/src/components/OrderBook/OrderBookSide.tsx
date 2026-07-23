@@ -17,13 +17,17 @@ function OrderBookSideComponent({
   depth,
   priceDecimals,
 }: OrderBookSideProps) {
-  const rows = useMemo(() => {
+  const { rows, maxSum } = useMemo(() => {
     const visible = levels.slice(0, depth)
     let running = 0
-    return visible.map((level) => {
+    const mapped = visible.map((level) => {
       running += level.price * level.qty
       return { ...level, sum: running }
     })
+    return {
+      rows: mapped,
+      maxSum: mapped.length ? mapped[mapped.length - 1].sum : 0,
+    }
   }, [levels, depth])
 
   const titleColor = side === 'bid' ? 'text-bid' : 'text-ask'
@@ -43,10 +47,12 @@ function OrderBookSideComponent({
         ) : (
           rows.map((level, index) => (
             <OrderBookRow
-              key={`${side}-${level.price}-${index}`}
+              // Stable index key keeps DOM nodes warm for flash animations
+              key={`${side}-${index}`}
               price={level.price}
               qty={level.qty}
               sum={level.sum}
+              maxSum={maxSum}
               side={side}
               priceDecimals={priceDecimals}
             />

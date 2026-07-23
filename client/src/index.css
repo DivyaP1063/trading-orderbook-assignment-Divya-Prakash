@@ -25,3 +25,29 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
 }
+
+@keyframes ob-flash-bid {
+  0% {
+    background-color: rgba(14, 203, 129, 0.35);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes ob-flash-ask {
+  0% {
+    background-color: rgba(246, 70, 93, 0.35);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.ob-flash-bid {
+  animation: ob-flash-bid 0.45s ease-out;
+}
+
+.ob-flash-ask {
+  animation: ob-flash-ask 0.45s ease-out;
+}

@@ -10,6 +10,8 @@ interface OrderBookHeaderProps {
   groupDecimals: number
   onGroupChange: (decimals: number) => void
   status: ConnectionStatus
+  reconnectAttempt?: number
+  maxReconnectAttempts?: number
   onConnect: () => void
   onDisconnect: () => void
 }
@@ -29,11 +31,19 @@ export function OrderBookHeader({
   groupDecimals,
   onGroupChange,
   status,
+  reconnectAttempt = 0,
+  maxReconnectAttempts = 3,
   onConnect,
   onDisconnect,
 }: OrderBookHeaderProps) {
   const isConnecting = status === 'connecting' || status === 'reconnecting'
   const isConnected = status === 'connected'
+  const connectLabel =
+    status === 'reconnecting'
+      ? `Reconnecting ${reconnectAttempt}/${maxReconnectAttempts}…`
+      : isConnecting
+        ? 'Connecting…'
+        : 'Connect'
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle px-4 py-3">
@@ -102,7 +112,7 @@ export function OrderBookHeader({
             ) : (
               <Plug className="size-3.5" />
             )}
-            {isConnecting ? 'Connecting…' : 'Connect'}
+            {connectLabel}
           </button>
         )}
       </div>

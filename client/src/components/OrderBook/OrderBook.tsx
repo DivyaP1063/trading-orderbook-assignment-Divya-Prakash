@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import type { ConnectionStatus, MarketBook, OrderLevel } from '../../types/market'
 import { groupPrice } from '../../utils/format'
 import { OrderBookHeader } from './OrderBookHeader'
@@ -8,6 +8,8 @@ interface OrderBookProps {
   book: MarketBook | null
   status: ConnectionStatus
   error: string | null
+  reconnectAttempt?: number
+  maxReconnectAttempts?: number
   onConnect: () => void
   onDisconnect: () => void
 }
@@ -32,23 +34,28 @@ function aggregateLevels(
   return aggregated
 }
 
-export function OrderBook({
+function OrderBookComponent({
   book,
   status,
   error,
+  reconnectAttempt = 0,
+  maxReconnectAttempts = 3,
   onConnect,
   onDisconnect,
 }: OrderBookProps) {
   const [depth, setDepth] = useState(15)
   const [groupDecimals, setGroupDecimals] = useState(2)
 
+  const bidLevels = book?.bids
+  const askLevels = book?.asks
+
   const bids = useMemo(
-    () => (book ? aggregateLevels(book.bids, groupDecimals, 'bid') : []),
-    [book, groupDecimals],
+    () => (bidLevels ? aggregateLevels(bidLevels, groupDecimals, 'bid') : []),
+    [bidLevels, groupDecimals],
   )
   const asks = useMemo(
-    () => (book ? aggregateLevels(book.asks, groupDecimals, 'ask') : []),
-    [book, groupDecimals],
+    () => (askLevels ? aggregateLevels(askLevels, groupDecimals, 'ask') : []),
+    [askLevels, groupDecimals],
   )
 
   return (
@@ -61,6 +68,8 @@ export function OrderBook({
         groupDecimals={groupDecimals}
         onGroupChange={setGroupDecimals}
         status={status}
+        reconnectAttempt={reconnectAttempt}
+        maxReconnectAttempts={maxReconnectAttempts}
         onConnect={onConnect}
         onDisconnect={onDisconnect}
       />
@@ -97,3 +106,5 @@ export function OrderBook({
     </div>
   )
 }
+
+export const OrderBook = memo(OrderBookComponent)
