@@ -94,7 +94,7 @@ export function OrderBookHeader({
           onClick={onExport}
           disabled={!canExport}
           title="Export book as JSON"
-          className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-transparent px-3 py-1.5 text-xs text-muted transition-colors hover:border-muted hover:bg-muted/20 hover:text-text disabled:pointer-events-none disabled:opacity-40"
         >
           <Download className="size-3.5" />
           Export
@@ -104,7 +104,7 @@ export function OrderBookHeader({
           type="button"
           onClick={onToggleTheme}
           title="Toggle dark mode"
-          className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-transparent px-3 py-1.5 text-xs text-muted transition-colors hover:border-muted hover:bg-muted/20 hover:text-text"
         >
           {theme === 'dark' ? (
             <Sun className="size-3.5" />

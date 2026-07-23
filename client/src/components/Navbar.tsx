@@ -35,10 +35,10 @@ export function Navbar() {
             <CompanyLogo />
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-tight text-text">
-                Vantage
+                Market Depth
               </p>
               <p className="text-[10px] uppercase tracking-[0.14em] text-muted">
-                Markets
+                Terminal
               </p>
             </div>
           </a>
