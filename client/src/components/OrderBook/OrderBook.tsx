@@ -1,5 +1,7 @@
-import { memo, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import type { ConnectionStatus, MarketBook, OrderLevel } from '../../types/market'
+import type { Theme } from '../../hooks/useTheme'
+import { exportBookAsJson } from '../../utils/exportBook'
 import { groupPrice } from '../../utils/format'
 import { OrderBookHeader } from './OrderBookHeader'
 import { OrderBookSide } from './OrderBookSide'
@@ -10,6 +12,8 @@ interface OrderBookProps {
   error: string | null
   reconnectAttempt?: number
   maxReconnectAttempts?: number
+  theme: Theme
+  onToggleTheme: () => void
   onConnect: () => void
   onDisconnect: () => void
 }
@@ -40,6 +44,8 @@ function OrderBookComponent({
   error,
   reconnectAttempt = 0,
   maxReconnectAttempts = 3,
+  theme,
+  onToggleTheme,
   onConnect,
   onDisconnect,
 }: OrderBookProps) {
@@ -58,6 +64,10 @@ function OrderBookComponent({
     [askLevels, groupDecimals],
   )
 
+  const handleExport = useCallback(() => {
+    if (book) exportBookAsJson(book)
+  }, [book])
+
   return (
     <div className="overflow-hidden rounded-lg border border-border-subtle bg-panel-elevated shadow-xl">
       <OrderBookHeader
@@ -70,6 +80,10 @@ function OrderBookComponent({
         status={status}
         reconnectAttempt={reconnectAttempt}
         maxReconnectAttempts={maxReconnectAttempts}
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+        canExport={!!book}
+        onExport={handleExport}
         onConnect={onConnect}
         onDisconnect={onDisconnect}
       />

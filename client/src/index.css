@@ -12,6 +12,16 @@
   --color-text: #eaecef;
 }
 
+html.light {
+  --color-panel: #f5f6f8;
+  --color-panel-elevated: #ffffff;
+  --color-border-subtle: #e6e8eb;
+  --color-muted: #707a8a;
+  --color-text: #1e2329;
+  --color-bid: #0ecb81;
+  --color-ask: #f6465d;
+}
+
 html,
 body,
 #root {
@@ -24,6 +34,7 @@ body {
   background: var(--color-panel);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 @keyframes ob-flash-bid {

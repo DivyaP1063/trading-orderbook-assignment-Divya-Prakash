@@ -1,5 +1,6 @@
-import { Loader2, Plug, Unplug } from 'lucide-react'
+import { Download, Loader2, Moon, Plug, Sun, Unplug } from 'lucide-react'
 import type { ConnectionStatus } from '../../types/market'
+import type { Theme } from '../../hooks/useTheme'
 import { formatPrice } from '../../utils/format'
 
 interface OrderBookHeaderProps {
@@ -12,6 +13,10 @@ interface OrderBookHeaderProps {
   status: ConnectionStatus
   reconnectAttempt?: number
   maxReconnectAttempts?: number
+  theme: Theme
+  onToggleTheme: () => void
+  canExport: boolean
+  onExport: () => void
   onConnect: () => void
   onDisconnect: () => void
 }
@@ -33,6 +38,10 @@ export function OrderBookHeader({
   status,
   reconnectAttempt = 0,
   maxReconnectAttempts = 3,
+  theme,
+  onToggleTheme,
+  canExport,
+  onExport,
   onConnect,
   onDisconnect,
 }: OrderBookHeaderProps) {
@@ -64,7 +73,7 @@ export function OrderBookHeader({
         <label className="flex items-center gap-2 text-xs text-muted">
           Depth
           <select
-            className="rounded border border-border-subtle bg-panel-elevated px-2 py-1.5 text-xs text-text outline-none focus:border-muted"
+            className="rounded border border-border-subtle bg-panel px-2 py-1.5 text-xs text-text outline-none focus:border-muted"
             value={depth}
             onChange={(e) => onDepthChange(Number(e.target.value))}
           >
@@ -79,7 +88,7 @@ export function OrderBookHeader({
         <label className="flex items-center gap-2 text-xs text-muted">
           Group
           <select
-            className="rounded border border-border-subtle bg-panel-elevated px-2 py-1.5 text-xs text-text outline-none focus:border-muted"
+            className="rounded border border-border-subtle bg-panel px-2 py-1.5 text-xs text-text outline-none focus:border-muted"
             value={groupDecimals}
             onChange={(e) => onGroupChange(Number(e.target.value))}
           >
@@ -90,6 +99,31 @@ export function OrderBookHeader({
             ))}
           </select>
         </label>
+
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={!canExport}
+          title="Export book as JSON"
+          className="inline-flex items-center gap-1.5 rounded border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5 disabled:opacity-40"
+        >
+          <Download className="size-3.5" />
+          Export
+        </button>
+
+        <button
+          type="button"
+          onClick={onToggleTheme}
+          title="Toggle dark mode"
+          className="inline-flex items-center gap-1.5 rounded border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5"
+        >
+          {theme === 'dark' ? (
+            <Sun className="size-3.5" />
+          ) : (
+            <Moon className="size-3.5" />
+          )}
+          {theme === 'dark' ? 'Light' : 'Dark'}
+        </button>
 
         {isConnected ? (
           <button
