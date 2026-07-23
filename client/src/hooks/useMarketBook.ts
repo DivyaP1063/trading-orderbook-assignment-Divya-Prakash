@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
+import { getServerBaseUrl } from '../config'
 import type { ConnectionStatus, MarketBook } from '../types/market'
 
-const WS_URL = 'https://trading-orderbook-assignment-divya.onrender.com'
-const API_URL = 'https://trading-orderbook-assignment-divya.onrender.com'
 const MAX_RECONNECT_ATTEMPTS = 3
 const RECONNECT_DELAY_MS = 1000
 
@@ -36,7 +35,8 @@ export function useMarketBook() {
   const attachSocket = useCallback(() => {
     teardownSocket()
 
-    const socket = io(`${WS_URL}/marketbook`, {
+    const baseUrl = getServerBaseUrl()
+    const socket = io(`${baseUrl}/marketbook`, {
       transports: ['websocket', 'polling'],
       autoConnect: true,
       reconnection: false,
@@ -79,7 +79,8 @@ export function useMarketBook() {
 
       clearReconnectTimer()
       reconnectTimerRef.current = setTimeout(() => {
-        void fetch(`${API_URL}/start-market`, { method: 'POST' }).catch(
+        const url = getServerBaseUrl()
+        void fetch(`${url}/start-market`, { method: 'POST' }).catch(
           () => undefined,
         )
         attachSocket()
@@ -96,7 +97,6 @@ export function useMarketBook() {
         setStatus('disconnected')
         return
       }
-      // Server/client drop — try reconnect
       scheduleReconnect(reason)
     })
   }, [clearReconnectTimer, teardownSocket])
@@ -121,8 +121,9 @@ export function useMarketBook() {
     setError(null)
     setStatus('connecting')
 
+    const baseUrl = getServerBaseUrl()
     try {
-      await fetch(`${API_URL}/start-market`, { method: 'POST' })
+      await fetch(`${baseUrl}/start-market`, { method: 'POST' })
     } catch {
       // Simulator may already be running — still try WS
     }
