@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 import type { ConnectionStatus, MarketBook } from '../types/market'
 
-const WS_URL = import.meta.env.VITE_WS_URL ?? 'http://localhost:5000'
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
+const WS_URL = 'https://trading-orderbook-assignment-divya.onrender.com'
+const API_URL = 'https://trading-orderbook-assignment-divya.onrender.com'
 const MAX_RECONNECT_ATTEMPTS = 3
 const RECONNECT_DELAY_MS = 1000
 
