@@ -76,8 +76,10 @@ function MiniChartComponent({ candles, symbol }: MiniChartProps) {
                 border: '1px solid var(--color-border-subtle)',
                 borderRadius: 8,
                 fontSize: 12,
+                color: 'var(--color-text)',
               }}
               labelStyle={{ color: 'var(--color-muted)' }}
+              itemStyle={{ color: 'var(--color-text)' }}
               formatter={(value, name) => {
                 if (name === 'wick' && Array.isArray(value)) {
                   return [`${formatPrice(value[0])} – ${formatPrice(value[1])}`, 'Range']

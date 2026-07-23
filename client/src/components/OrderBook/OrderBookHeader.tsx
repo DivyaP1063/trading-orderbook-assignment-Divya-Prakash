@@ -2,6 +2,7 @@ import { Download, Loader2, Moon, Plug, Sun, Unplug } from 'lucide-react'
 import type { ConnectionStatus } from '../../types/market'
 import type { Theme } from '../../hooks/useTheme'
 import { formatPrice } from '../../utils/format'
+import { SelectMenu } from '../SelectMenu'
 
 interface OrderBookHeaderProps {
   symbol: string
@@ -21,7 +22,12 @@ interface OrderBookHeaderProps {
   onDisconnect: () => void
 }
 
-const DEPTH_OPTIONS = [5, 10, 15]
+const DEPTH_OPTIONS = [
+  { label: '5 levels', value: 5 },
+  { label: '10 levels', value: 10 },
+  { label: '15 levels', value: 15 },
+]
+
 const GROUP_OPTIONS = [
   { label: '0 decimals', value: 0 },
   { label: '1 decimal', value: 1 },
@@ -70,42 +76,25 @@ export function OrderBookHeader({
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="flex items-center gap-2 text-xs text-muted">
-          Depth
-          <select
-            className="rounded border border-border-subtle bg-panel px-2 py-1.5 text-xs text-text outline-none focus:border-muted"
-            value={depth}
-            onChange={(e) => onDepthChange(Number(e.target.value))}
-          >
-            {DEPTH_OPTIONS.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="flex items-center gap-2 text-xs text-muted">
-          Group
-          <select
-            className="rounded border border-border-subtle bg-panel px-2 py-1.5 text-xs text-text outline-none focus:border-muted"
-            value={groupDecimals}
-            onChange={(e) => onGroupChange(Number(e.target.value))}
-          >
-            {GROUP_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectMenu
+          label="Depth"
+          value={depth}
+          options={DEPTH_OPTIONS}
+          onChange={onDepthChange}
+        />
+        <SelectMenu
+          label="Group"
+          value={groupDecimals}
+          options={GROUP_OPTIONS}
+          onChange={onGroupChange}
+        />
 
         <button
           type="button"
           onClick={onExport}
           disabled={!canExport}
           title="Export book as JSON"
-          className="inline-flex items-center gap-1.5 rounded border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5 disabled:opacity-40"
         >
           <Download className="size-3.5" />
           Export
@@ -115,7 +104,7 @@ export function OrderBookHeader({
           type="button"
           onClick={onToggleTheme}
           title="Toggle dark mode"
-          className="inline-flex items-center gap-1.5 rounded border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle px-3 py-1.5 text-xs text-muted hover:bg-white/5"
         >
           {theme === 'dark' ? (
             <Sun className="size-3.5" />
@@ -129,7 +118,7 @@ export function OrderBookHeader({
           <button
             type="button"
             onClick={onDisconnect}
-            className="inline-flex items-center gap-1.5 rounded bg-ask/15 px-3 py-1.5 text-xs font-medium text-ask hover:bg-ask/25"
+            className="inline-flex items-center gap-1.5 rounded-md bg-ask/15 px-3 py-1.5 text-xs font-medium text-ask hover:bg-ask/25"
           >
             <Unplug className="size-3.5" />
             Disconnect
@@ -139,7 +128,7 @@ export function OrderBookHeader({
             type="button"
             onClick={onConnect}
             disabled={isConnecting}
-            className="inline-flex items-center gap-1.5 rounded bg-bid/15 px-3 py-1.5 text-xs font-medium text-bid hover:bg-bid/25 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-bid/15 px-3 py-1.5 text-xs font-medium text-bid hover:bg-bid/25 disabled:opacity-50"
           >
             {isConnecting ? (
               <Loader2 className="size-3.5 animate-spin" />
